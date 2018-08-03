@@ -22,19 +22,19 @@
 	auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start); \
 	*elapsed_time = duration.count() * 1.0e-6;
 
-#define TIME_START_GPU cudaEvent_t start, stop; /* cudaEvent_t: CUDA event types,½á¹¹ÌåÀàĞÍ, CUDAÊÂ¼ş,ÓÃÓÚ²âÁ¿GPUÔÚÄ³
-	¸öÈÎÎñÉÏ»¨·ÑµÄÊ±¼ä,CUDAÖĞµÄÊÂ¼ş±¾ÖÊÉÏÊÇÒ»¸öGPUÊ±¼ä´Á,ÓÉÓÚCUDAÊÂ¼şÊÇÔÚ
-	GPUÉÏÊµÏÖµÄ,Òò´ËËüÃÇ²»ÊÊÓÚ¶ÔÍ¬Ê±°üº¬Éè±¸´úÂëºÍÖ÷»ú´úÂëµÄ»ìºÏ´úÂë¼ÆÊ± */ \
-	cudaEventCreate(&start); /* ´´½¨Ò»¸öÊÂ¼ş¶ÔÏó,Òì²½Æô¶¯ */ \
+#define TIME_START_GPU cudaEvent_t start, stop; /* cudaEvent_t: CUDA event types,ç»“æ„ä½“ç±»å‹, CUDAäº‹ä»¶,ç”¨äºæµ‹é‡GPUåœ¨æŸ
+	ä¸ªä»»åŠ¡ä¸ŠèŠ±è´¹çš„æ—¶é—´,CUDAä¸­çš„äº‹ä»¶æœ¬è´¨ä¸Šæ˜¯ä¸€ä¸ªGPUæ—¶é—´æˆ³,ç”±äºCUDAäº‹ä»¶æ˜¯åœ¨
+	GPUä¸Šå®ç°çš„,å› æ­¤å®ƒä»¬ä¸é€‚äºå¯¹åŒæ—¶åŒ…å«è®¾å¤‡ä»£ç å’Œä¸»æœºä»£ç çš„æ··åˆä»£ç è®¡æ—¶ */ \
+	cudaEventCreate(&start); /* åˆ›å»ºä¸€ä¸ªäº‹ä»¶å¯¹è±¡,å¼‚æ­¥å¯åŠ¨ */ \
 	cudaEventCreate(&stop); \
-	cudaEventRecord(start, 0); /* ¼ÇÂ¼Ò»¸öÊÂ¼ş,Òì²½Æô¶¯,start¼ÇÂ¼ÆğÊ¼Ê±¼ä */
-#define TIME_END_GPU cudaEventRecord(stop, 0); /* ¼ÇÂ¼Ò»¸öÊÂ¼ş,Òì²½Æô¶¯,stop¼ÇÂ¼½áÊøÊ±¼ä */ \
-	cudaEventSynchronize(stop); /* ÊÂ¼şÍ¬²½,µÈ´ıÒ»¸öÊÂ¼şÍê³É,Òì²½Æô¶¯ */ \
-	cudaEventElapsedTime(elapsed_time, start, stop); /* ¼ÆËãÁ½¸öÊÂ¼şÖ®¼ä¾­ÀúµÄÊ±¼ä,µ¥Î»ÎªºÁÃë,Òì²½Æô¶¯ */ \
-	cudaEventDestroy(start); /* Ïú»ÙÊÂ¼ş¶ÔÏó,Òì²½Æô¶¯ */ \
+	cudaEventRecord(start, 0); /* è®°å½•ä¸€ä¸ªäº‹ä»¶,å¼‚æ­¥å¯åŠ¨,startè®°å½•èµ·å§‹æ—¶é—´ */
+#define TIME_END_GPU cudaEventRecord(stop, 0); /* è®°å½•ä¸€ä¸ªäº‹ä»¶,å¼‚æ­¥å¯åŠ¨,stopè®°å½•ç»“æŸæ—¶é—´ */ \
+	cudaEventSynchronize(stop); /* äº‹ä»¶åŒæ­¥,ç­‰å¾…ä¸€ä¸ªäº‹ä»¶å®Œæˆ,å¼‚æ­¥å¯åŠ¨ */ \
+	cudaEventElapsedTime(elapsed_time, start, stop); /* è®¡ç®—ä¸¤ä¸ªäº‹ä»¶ä¹‹é—´ç»å†çš„æ—¶é—´,å•ä½ä¸ºæ¯«ç§’,å¼‚æ­¥å¯åŠ¨ */ \
+	cudaEventDestroy(start); /* é”€æ¯äº‹ä»¶å¯¹è±¡,å¼‚æ­¥å¯åŠ¨ */ \
 	cudaEventDestroy(stop);
 
-#define EPS_ 1.0e-4 // ¦Å(Epsilon),·Ç³£Ğ¡µÄÊı
+#define EPS_ 1.0e-4 // Îµ(Epsilon),éå¸¸å°çš„æ•°
 #define PI 3.1415926535897932f
 #define INF 2.e10f
 

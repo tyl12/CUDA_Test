@@ -3,7 +3,7 @@
 #include <memory>
 #include "common.hpp"
 
-// 通过一个数据结构对球面建模
+// 閫氳繃涓�涓暟鎹粨鏋勫鐞冮潰寤烘ā
 struct Sphere {
 	float r, b, g;
 	float radius;

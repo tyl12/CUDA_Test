@@ -7,28 +7,28 @@
 #include <device_launch_parameters.h>
 #include "common.hpp"
 
-/* __global__: º¯ÊıÀàĞÍÏŞ¶¨·û;ÔÚÉè±¸ÉÏÔËĞĞ;ÔÚÖ÷»ú¶Ëµ÷ÓÃ,¼ÆËãÄÜÁ¦3.2¼°ÒÔÉÏ¿ÉÒÔÔÚ
-Éè±¸¶Ëµ÷ÓÃ;ÉùÃ÷µÄº¯ÊıµÄ·µ»ØÖµ±ØĞëÊÇvoidÀàĞÍ;¶Ô´ËÀàĞÍº¯ÊıµÄµ÷ÓÃÊÇÒì²½µÄ,¼´ÔÚ
-Éè±¸ÍêÈ«Íê³ÉËüµÄÔËĞĞÖ®Ç°¾Í·µ»ØÁË;¶Ô´ËÀàĞÍº¯ÊıµÄµ÷ÓÃ±ØĞëÖ¸¶¨Ö´ĞĞÅäÖÃ,¼´ÓÃÓÚÔÚ
-Éè±¸ÉÏÖ´ĞĞº¯ÊıÊ±µÄgridºÍblockµÄÎ¬¶È,ÒÔ¼°Ïà¹ØµÄÁ÷(¼´²åÈë<<<   >>>ÔËËã·û);
-a kernel,±íÊ¾´Ëº¯ÊıÎªÄÚºËº¯Êı(ÔËĞĞÔÚGPUÉÏµÄCUDA²¢ĞĞ¼ÆËãº¯Êı³ÆÎªkernel(ÄÚºËº¯
-Êı),ÄÚºËº¯Êı±ØĞëÍ¨¹ı__global__º¯ÊıÀàĞÍÏŞ¶¨·û¶¨Òå); */
+/* __global__: å‡½æ•°ç±»å‹é™å®šç¬¦;åœ¨è®¾å¤‡ä¸Šè¿è¡Œ;åœ¨ä¸»æœºç«¯è°ƒç”¨,è®¡ç®—èƒ½åŠ›3.2åŠä»¥ä¸Šå¯ä»¥åœ¨
+è®¾å¤‡ç«¯è°ƒç”¨;å£°æ˜çš„å‡½æ•°çš„è¿”å›å€¼å¿…é¡»æ˜¯voidç±»å‹;å¯¹æ­¤ç±»å‹å‡½æ•°çš„è°ƒç”¨æ˜¯å¼‚æ­¥çš„,å³åœ¨
+è®¾å¤‡å®Œå…¨å®Œæˆå®ƒçš„è¿è¡Œä¹‹å‰å°±è¿”å›äº†;å¯¹æ­¤ç±»å‹å‡½æ•°çš„è°ƒç”¨å¿…é¡»æŒ‡å®šæ‰§è¡Œé…ç½®,å³ç”¨äºåœ¨
+è®¾å¤‡ä¸Šæ‰§è¡Œå‡½æ•°æ—¶çš„gridå’Œblockçš„ç»´åº¦,ä»¥åŠç›¸å…³çš„æµ(å³æ’å…¥<<<   >>>è¿ç®—ç¬¦);
+a kernel,è¡¨ç¤ºæ­¤å‡½æ•°ä¸ºå†…æ ¸å‡½æ•°(è¿è¡Œåœ¨GPUä¸Šçš„CUDAå¹¶è¡Œè®¡ç®—å‡½æ•°ç§°ä¸ºkernel(å†…æ ¸å‡½
+æ•°),å†…æ ¸å‡½æ•°å¿…é¡»é€šè¿‡__global__å‡½æ•°ç±»å‹é™å®šç¬¦å®šä¹‰); */
 __global__ static void copy_const_kernel(float* iptr, const float* cptr)
 {
-	/* gridDim: ÄÚÖÃ±äÁ¿,ÓÃÓÚÃèÊöÏß³ÌÍø¸ñµÄÎ¬¶È,¶ÔÓÚËùÓĞÏß³Ì¿éÀ´Ëµ,Õâ¸ö
-	±äÁ¿ÊÇÒ»¸ö³£Êı,ÓÃÀ´±£´æÏß³Ì¸ñÃ¿Ò»Î¬µÄ´óĞ¡,¼´Ã¿¸öÏß³Ì¸ñÖĞÏß³Ì¿éµÄÊıÁ¿.
-	Ò»¸ögridÎªÈıÎ¬,Îªdim3ÀàĞÍ£»
-	blockDim: ÄÚÖÃ±äÁ¿,ÓÃÓÚËµÃ÷Ã¿¸öblockµÄÎ¬¶ÈÓë³ß´ç.Îªdim3ÀàĞÍ,°üº¬
-	ÁËblockÔÚÈı¸öÎ¬¶ÈÉÏµÄ³ß´çĞÅÏ¢;¶ÔÓÚËùÓĞÏß³Ì¿éÀ´Ëµ,Õâ¸ö±äÁ¿ÊÇÒ»¸ö³£Êı,
-	±£´æµÄÊÇÏß³Ì¿éÖĞÃ¿Ò»Î¬µÄÏß³ÌÊıÁ¿;
-	blockIdx: ÄÚÖÃ±äÁ¿,±äÁ¿ÖĞ°üº¬µÄÖµ¾ÍÊÇµ±Ç°Ö´ĞĞÉè±¸´úÂëµÄÏß³Ì¿éµÄË÷Òı;ÓÃ
-	ÓÚËµÃ÷µ±Ç°threadËùÔÚµÄblockÔÚÕû¸ögridÖĞµÄÎ»ÖÃ,blockIdx.xÈ¡Öµ·¶Î§ÊÇ
-	[0,gridDim.x-1],blockIdx.yÈ¡Öµ·¶Î§ÊÇ[0, gridDim.y-1].Îªuint3ÀàĞÍ,
-	°üº¬ÁËÒ»¸öblockÔÚgridÖĞ¸÷¸öÎ¬¶ÈÉÏµÄË÷ÒıĞÅÏ¢;
-	threadIdx: ÄÚÖÃ±äÁ¿,±äÁ¿ÖĞ°üº¬µÄÖµ¾ÍÊÇµ±Ç°Ö´ĞĞÉè±¸´úÂëµÄÏß³ÌË÷Òı;ÓÃÓÚ
-	ËµÃ÷µ±Ç°threadÔÚblockÖĞµÄÎ»ÖÃ;Èç¹ûÏß³ÌÊÇÒ»Î¬µÄ¿É»ñÈ¡threadIdx.x,Èç¹û
-	ÊÇ¶şÎ¬µÄ»¹¿É»ñÈ¡threadIdx.y,Èç¹ûÊÇÈıÎ¬µÄ»¹¿É»ñÈ¡threadIdx.z;Îªuint3Àà
-	ĞÍ,°üº¬ÁËÒ»¸öthreadÔÚblockÖĞ¸÷¸öÎ¬¶ÈµÄË÷ÒıĞÅÏ¢ */
+	/* gridDim: å†…ç½®å˜é‡,ç”¨äºæè¿°çº¿ç¨‹ç½‘æ ¼çš„ç»´åº¦,å¯¹äºæ‰€æœ‰çº¿ç¨‹å—æ¥è¯´,è¿™ä¸ª
+	å˜é‡æ˜¯ä¸€ä¸ªå¸¸æ•°,ç”¨æ¥ä¿å­˜çº¿ç¨‹æ ¼æ¯ä¸€ç»´çš„å¤§å°,å³æ¯ä¸ªçº¿ç¨‹æ ¼ä¸­çº¿ç¨‹å—çš„æ•°é‡.
+	ä¸€ä¸ªgridä¸ºä¸‰ç»´,ä¸ºdim3ç±»å‹ï¼›
+	blockDim: å†…ç½®å˜é‡,ç”¨äºè¯´æ˜æ¯ä¸ªblockçš„ç»´åº¦ä¸å°ºå¯¸.ä¸ºdim3ç±»å‹,åŒ…å«
+	äº†blockåœ¨ä¸‰ä¸ªç»´åº¦ä¸Šçš„å°ºå¯¸ä¿¡æ¯;å¯¹äºæ‰€æœ‰çº¿ç¨‹å—æ¥è¯´,è¿™ä¸ªå˜é‡æ˜¯ä¸€ä¸ªå¸¸æ•°,
+	ä¿å­˜çš„æ˜¯çº¿ç¨‹å—ä¸­æ¯ä¸€ç»´çš„çº¿ç¨‹æ•°é‡;
+	blockIdx: å†…ç½®å˜é‡,å˜é‡ä¸­åŒ…å«çš„å€¼å°±æ˜¯å½“å‰æ‰§è¡Œè®¾å¤‡ä»£ç çš„çº¿ç¨‹å—çš„ç´¢å¼•;ç”¨
+	äºè¯´æ˜å½“å‰threadæ‰€åœ¨çš„blockåœ¨æ•´ä¸ªgridä¸­çš„ä½ç½®,blockIdx.xå–å€¼èŒƒå›´æ˜¯
+	[0,gridDim.x-1],blockIdx.yå–å€¼èŒƒå›´æ˜¯[0, gridDim.y-1].ä¸ºuint3ç±»å‹,
+	åŒ…å«äº†ä¸€ä¸ªblockåœ¨gridä¸­å„ä¸ªç»´åº¦ä¸Šçš„ç´¢å¼•ä¿¡æ¯;
+	threadIdx: å†…ç½®å˜é‡,å˜é‡ä¸­åŒ…å«çš„å€¼å°±æ˜¯å½“å‰æ‰§è¡Œè®¾å¤‡ä»£ç çš„çº¿ç¨‹ç´¢å¼•;ç”¨äº
+	è¯´æ˜å½“å‰threadåœ¨blockä¸­çš„ä½ç½®;å¦‚æœçº¿ç¨‹æ˜¯ä¸€ç»´çš„å¯è·å–threadIdx.x,å¦‚æœ
+	æ˜¯äºŒç»´çš„è¿˜å¯è·å–threadIdx.y,å¦‚æœæ˜¯ä¸‰ç»´çš„è¿˜å¯è·å–threadIdx.z;ä¸ºuint3ç±»
+	å‹,åŒ…å«äº†ä¸€ä¸ªthreadåœ¨blockä¸­å„ä¸ªç»´åº¦çš„ç´¢å¼•ä¿¡æ¯ */
 	// map from threadIdx/BlockIdx to pixel position
 	int x = threadIdx.x + blockIdx.x * blockDim.x;
 	int y = threadIdx.y + blockIdx.y * blockDim.y;
@@ -57,10 +57,10 @@ __global__ static void blend_kernel(float* outSrc, const float* inSrc, int width
 	outSrc[offset] = inSrc[offset] + speed * (inSrc[top] + inSrc[bottom] + inSrc[left] + inSrc[right] - inSrc[offset] * 4);
 }
 
-/* __device__: º¯ÊıÀàĞÍÏŞ¶¨·û,±íÃ÷±»ĞŞÊÎµÄº¯ÊıÔÚÉè±¸ÉÏÖ´ĞĞ£¬Ö»ÄÜ´ÓÉè±¸ÉÏµ÷ÓÃ£¬
-µ«Ö»ÄÜÔÚÆäËü__device__º¯Êı»òÕß__global__º¯ÊıÖĞµ÷ÓÃ£»__device__º¯Êı²»Ö§³Öµİ¹é£»
-__device__º¯ÊıµÄº¯ÊıÌåÄÚ²»ÄÜÉùÃ÷¾²Ì¬±äÁ¿£»__device__º¯ÊıµÄ²ÎÊıÊıÄ¿ÊÇ²»¿É±ä»¯µÄ;
-²»ÄÜ¶Ô__device__º¯ÊıÈ¡Ö¸Õë */
+/* __device__: å‡½æ•°ç±»å‹é™å®šç¬¦,è¡¨æ˜è¢«ä¿®é¥°çš„å‡½æ•°åœ¨è®¾å¤‡ä¸Šæ‰§è¡Œï¼Œåªèƒ½ä»è®¾å¤‡ä¸Šè°ƒç”¨ï¼Œ
+ä½†åªèƒ½åœ¨å…¶å®ƒ__device__å‡½æ•°æˆ–è€…__global__å‡½æ•°ä¸­è°ƒç”¨ï¼›__device__å‡½æ•°ä¸æ”¯æŒé€’å½’ï¼›
+__device__å‡½æ•°çš„å‡½æ•°ä½“å†…ä¸èƒ½å£°æ˜é™æ€å˜é‡ï¼›__device__å‡½æ•°çš„å‚æ•°æ•°ç›®æ˜¯ä¸å¯å˜åŒ–çš„;
+ä¸èƒ½å¯¹__device__å‡½æ•°å–æŒ‡é’ˆ */
 __device__ static unsigned char value(float n1, float n2, int hue)
 {
 	if (hue > 360) hue -= 360;
@@ -99,14 +99,14 @@ __global__ static void float_to_color(unsigned char *optr, const float *outSrc)
 
 static int heat_conduction_gpu_1(unsigned char* ptr, int width, int height, const float* src, float speed, float* elapsed_time)
 {
-	/* cudaEvent_t: CUDA event types,½á¹¹ÌåÀàĞÍ, CUDAÊÂ¼ş,ÓÃÓÚ²âÁ¿GPUÔÚÄ³
-	¸öÈÎÎñÉÏ»¨·ÑµÄÊ±¼ä,CUDAÖĞµÄÊÂ¼ş±¾ÖÊÉÏÊÇÒ»¸öGPUÊ±¼ä´Á,ÓÉÓÚCUDAÊÂ¼şÊÇÔÚ
-	GPUÉÏÊµÏÖµÄ,Òò´ËËüÃÇ²»ÊÊÓÚ¶ÔÍ¬Ê±°üº¬Éè±¸´úÂëºÍÖ÷»ú´úÂëµÄ»ìºÏ´úÂë¼ÆÊ± */
+	/* cudaEvent_t: CUDA event types,ç»“æ„ä½“ç±»å‹, CUDAäº‹ä»¶,ç”¨äºæµ‹é‡GPUåœ¨æŸ
+	ä¸ªä»»åŠ¡ä¸ŠèŠ±è´¹çš„æ—¶é—´,CUDAä¸­çš„äº‹ä»¶æœ¬è´¨ä¸Šæ˜¯ä¸€ä¸ªGPUæ—¶é—´æˆ³,ç”±äºCUDAäº‹ä»¶æ˜¯åœ¨
+	GPUä¸Šå®ç°çš„,å› æ­¤å®ƒä»¬ä¸é€‚äºå¯¹åŒæ—¶åŒ…å«è®¾å¤‡ä»£ç å’Œä¸»æœºä»£ç çš„æ··åˆä»£ç è®¡æ—¶ */
 	cudaEvent_t start, stop;
-	// cudaEventCreate: ´´½¨Ò»¸öÊÂ¼ş¶ÔÏó,Òì²½Æô¶¯
+	// cudaEventCreate: åˆ›å»ºä¸€ä¸ªäº‹ä»¶å¯¹è±¡,å¼‚æ­¥å¯åŠ¨
 	cudaEventCreate(&start);
 	cudaEventCreate(&stop);
-	// cudaEventRecord: ¼ÇÂ¼Ò»¸öÊÂ¼ş,Òì²½Æô¶¯,start¼ÇÂ¼ÆğÊ¼Ê±¼ä
+	// cudaEventRecord: è®°å½•ä¸€ä¸ªäº‹ä»¶,å¼‚æ­¥å¯åŠ¨,startè®°å½•èµ·å§‹æ—¶é—´
 	cudaEventRecord(start, 0);
 
 	float* dev_inSrc{ nullptr };
@@ -116,26 +116,26 @@ static int heat_conduction_gpu_1(unsigned char* ptr, int width, int height, cons
 	const size_t length1{ width * height * sizeof(float) };
 	const size_t length2{ width * height * 4 * sizeof(unsigned char) };
 
-	// cudaMalloc: ÔÚÉè±¸¶Ë·ÖÅäÄÚ´æ
+	// cudaMalloc: åœ¨è®¾å¤‡ç«¯åˆ†é…å†…å­˜
 	cudaMalloc(&dev_inSrc, length1);
 	cudaMalloc(&dev_outSrc, length1);
 	cudaMalloc(&dev_constSrc, length1);
 	cudaMalloc(&dev_image, length2);
 
-	/* cudaMemcpy: ÔÚÖ÷»ú¶ËºÍÉè±¸¶Ë¿½±´Êı¾İ,´Ëº¯ÊıµÚËÄ¸ö²ÎÊı½öÄÜÊÇÏÂÃæÖ®Ò»:
-	(1). cudaMemcpyHostToHost: ¿½±´Êı¾İ´ÓÖ÷»ú¶Ëµ½Ö÷»ú¶Ë
-	(2). cudaMemcpyHostToDevice: ¿½±´Êı¾İ´ÓÖ÷»ú¶Ëµ½Éè±¸¶Ë
-	(3). cudaMemcpyDeviceToHost: ¿½±´Êı¾İ´ÓÉè±¸¶Ëµ½Ö÷»ú¶Ë
-	(4). cudaMemcpyDeviceToDevice: ¿½±´Êı¾İ´ÓÉè±¸¶Ëµ½Éè±¸¶Ë
-	(5). cudaMemcpyDefault: ´ÓÖ¸ÕëÖµ×Ô¶¯ÍÆ¶Ï¿½±´Êı¾İ·½Ïò,ĞèÒªÖ§³Ö
-	Í³Ò»ĞéÄâÑ°Ö·(CUDA6.0¼°ÒÔÉÏ°æ±¾)
-	cudaMemcpyº¯Êı¶ÔÓÚÖ÷»úÊÇÍ¬²½µÄ */
+	/* cudaMemcpy: åœ¨ä¸»æœºç«¯å’Œè®¾å¤‡ç«¯æ‹·è´æ•°æ®,æ­¤å‡½æ•°ç¬¬å››ä¸ªå‚æ•°ä»…èƒ½æ˜¯ä¸‹é¢ä¹‹ä¸€:
+	(1). cudaMemcpyHostToHost: æ‹·è´æ•°æ®ä»ä¸»æœºç«¯åˆ°ä¸»æœºç«¯
+	(2). cudaMemcpyHostToDevice: æ‹·è´æ•°æ®ä»ä¸»æœºç«¯åˆ°è®¾å¤‡ç«¯
+	(3). cudaMemcpyDeviceToHost: æ‹·è´æ•°æ®ä»è®¾å¤‡ç«¯åˆ°ä¸»æœºç«¯
+	(4). cudaMemcpyDeviceToDevice: æ‹·è´æ•°æ®ä»è®¾å¤‡ç«¯åˆ°è®¾å¤‡ç«¯
+	(5). cudaMemcpyDefault: ä»æŒ‡é’ˆå€¼è‡ªåŠ¨æ¨æ–­æ‹·è´æ•°æ®æ–¹å‘,éœ€è¦æ”¯æŒ
+	ç»Ÿä¸€è™šæ‹Ÿå¯»å€(CUDA6.0åŠä»¥ä¸Šç‰ˆæœ¬)
+	cudaMemcpyå‡½æ•°å¯¹äºä¸»æœºæ˜¯åŒæ­¥çš„ */
 	cudaMemcpy(dev_constSrc, src, length1, cudaMemcpyHostToDevice);
 
 	const int threads_block{ 16 };
-	/* dim3: »ùÓÚuint3¶¨ÒåµÄÄÚÖÃÊ¸Á¿ÀàĞÍ£¬Ïàµ±ÓÚÓÉ3¸öunsigned intÀàĞÍ×é³ÉµÄ
-	½á¹¹Ìå£¬¿É±íÊ¾Ò»¸öÈıÎ¬Êı×é£¬ÔÚ¶¨Òådim3ÀàĞÍ±äÁ¿Ê±£¬·²ÊÇÃ»ÓĞ¸³ÖµµÄÔªËØ¶¼
-	»á±»¸³ÓèÄ¬ÈÏÖµ1 */
+	/* dim3: åŸºäºuint3å®šä¹‰çš„å†…ç½®çŸ¢é‡ç±»å‹ï¼Œç›¸å½“äºç”±3ä¸ªunsigned intç±»å‹ç»„æˆçš„
+	ç»“æ„ä½“ï¼Œå¯è¡¨ç¤ºä¸€ä¸ªä¸‰ç»´æ•°ç»„ï¼Œåœ¨å®šä¹‰dim3ç±»å‹å˜é‡æ—¶ï¼Œå‡¡æ˜¯æ²¡æœ‰èµ‹å€¼çš„å…ƒç´ éƒ½
+	ä¼šè¢«èµ‹äºˆé»˜è®¤å€¼1 */
 	dim3 blocks(width / threads_block, height / threads_block);
 	dim3 threads(threads_block, threads_block);
 
@@ -145,38 +145,38 @@ static int heat_conduction_gpu_1(unsigned char* ptr, int width, int height, cons
 		std::swap(dev_inSrc, dev_outSrc);
 	}
 
-	/* <<< >>>: ÎªCUDAÒıÈëµÄÔËËã·û,Ö¸¶¨Ïß³ÌÍø¸ñºÍÏß³Ì¿éÎ¬¶ÈµÈ,´«µİÖ´ĞĞ²Î
-	Êı¸øCUDA±àÒëÆ÷ºÍÔËĞĞÊ±ÏµÍ³,ÓÃÓÚËµÃ÷ÄÚºËº¯ÊıÖĞµÄÏß³ÌÊıÁ¿,ÒÔ¼°Ïß³ÌÊÇÈçºÎ
-	×éÖ¯µÄ;¼âÀ¨ºÅÖĞÕâĞ©²ÎÊı²¢²»ÊÇ´«µİ¸øÉè±¸´úÂëµÄ²ÎÊı,¶øÊÇ¸æËßÔËĞĞÊ±ÈçºÎ
-	Æô¶¯Éè±¸´úÂë,´«µİ¸øÉè±¸´úÂë±¾ÉíµÄ²ÎÊıÊÇ·ÅÔÚÔ²À¨ºÅÖĞ´«µİµÄ,¾ÍÏñ±ê×¼µÄº¯
-	Êıµ÷ÓÃÒ»Ñù;²»Í¬¼ÆËãÄÜÁ¦µÄÉè±¸¶ÔÏß³ÌµÄ×ÜÊıºÍ×éÖ¯·½Ê½ÓĞ²»Í¬µÄÔ¼Êø;±ØĞë
-	ÏÈÎªkernelÖĞÓÃµ½µÄÊı×é»ò±äÁ¿·ÖÅäºÃ×ã¹»µÄ¿Õ¼ä,ÔÙµ÷ÓÃkernelº¯Êı,·ñÔòÔÚ
-	GPU¼ÆËãÊ±»á·¢Éú´íÎó,ÀıÈçÔ½½çµÈ;
-	Ê¹ÓÃÔËĞĞÊ±APIÊ±,ĞèÒªÔÚµ÷ÓÃµÄÄÚºËº¯ÊıÃûÓë²ÎÊıÁĞ±íÖ±½ÓÒÔ<<<Dg,Db,Ns,S>>>
-	µÄĞÎÊ½ÉèÖÃÖ´ĞĞÅäÖÃ,ÆäÖĞ£ºDgÊÇÒ»¸ödim3ĞÍ±äÁ¿,ÓÃÓÚÉèÖÃgridµÄÎ¬¶ÈºÍ¸÷¸ö
-	Î¬¶ÈÉÏµÄ³ß´ç.ÉèÖÃºÃDgºó,gridÖĞ½«ÓĞDg.x*Dg.y*Dg.z¸öblock;DbÊÇ
-	Ò»¸ödim3ĞÍ±äÁ¿,ÓÃÓÚÉèÖÃblockµÄÎ¬¶ÈºÍ¸÷¸öÎ¬¶ÈÉÏµÄ³ß´ç.ÉèÖÃºÃDbºó,Ã¿¸ö
-	blockÖĞ½«ÓĞDb.x*Db.y*Db.z¸öthread;NsÊÇÒ»¸ösize_tĞÍ±äÁ¿,Ö¸¶¨¸÷¿éÎª´Ëµ÷
-	ÓÃ¶¯Ì¬·ÖÅäµÄ¹²Ïí´æ´¢Æ÷´óĞ¡,ÕâĞ©¶¯Ì¬·ÖÅäµÄ´æ´¢Æ÷¿É¹©ÉùÃ÷ÎªÍâ²¿Êı×é
-	(extern __shared__)µÄÆäËûÈÎºÎ±äÁ¿Ê¹ÓÃ;NsÊÇÒ»¸ö¿ÉÑ¡²ÎÊı,Ä¬ÈÏÖµÎª0;SÎª
-	cudaStream_tÀàĞÍ,ÓÃÓÚÉèÖÃÓëÄÚºËº¯Êı¹ØÁªµÄÁ÷.SÊÇÒ»¸ö¿ÉÑ¡²ÎÊı,Ä¬ÈÏÖµ0. */
+	/* <<< >>>: ä¸ºCUDAå¼•å…¥çš„è¿ç®—ç¬¦,æŒ‡å®šçº¿ç¨‹ç½‘æ ¼å’Œçº¿ç¨‹å—ç»´åº¦ç­‰,ä¼ é€’æ‰§è¡Œå‚
+	æ•°ç»™CUDAç¼–è¯‘å™¨å’Œè¿è¡Œæ—¶ç³»ç»Ÿ,ç”¨äºè¯´æ˜å†…æ ¸å‡½æ•°ä¸­çš„çº¿ç¨‹æ•°é‡,ä»¥åŠçº¿ç¨‹æ˜¯å¦‚ä½•
+	ç»„ç»‡çš„;å°–æ‹¬å·ä¸­è¿™äº›å‚æ•°å¹¶ä¸æ˜¯ä¼ é€’ç»™è®¾å¤‡ä»£ç çš„å‚æ•°,è€Œæ˜¯å‘Šè¯‰è¿è¡Œæ—¶å¦‚ä½•
+	å¯åŠ¨è®¾å¤‡ä»£ç ,ä¼ é€’ç»™è®¾å¤‡ä»£ç æœ¬èº«çš„å‚æ•°æ˜¯æ”¾åœ¨åœ†æ‹¬å·ä¸­ä¼ é€’çš„,å°±åƒæ ‡å‡†çš„å‡½
+	æ•°è°ƒç”¨ä¸€æ ·;ä¸åŒè®¡ç®—èƒ½åŠ›çš„è®¾å¤‡å¯¹çº¿ç¨‹çš„æ€»æ•°å’Œç»„ç»‡æ–¹å¼æœ‰ä¸åŒçš„çº¦æŸ;å¿…é¡»
+	å…ˆä¸ºkernelä¸­ç”¨åˆ°çš„æ•°ç»„æˆ–å˜é‡åˆ†é…å¥½è¶³å¤Ÿçš„ç©ºé—´,å†è°ƒç”¨kernelå‡½æ•°,å¦åˆ™åœ¨
+	GPUè®¡ç®—æ—¶ä¼šå‘ç”Ÿé”™è¯¯,ä¾‹å¦‚è¶Šç•Œç­‰;
+	ä½¿ç”¨è¿è¡Œæ—¶APIæ—¶,éœ€è¦åœ¨è°ƒç”¨çš„å†…æ ¸å‡½æ•°åä¸å‚æ•°åˆ—è¡¨ç›´æ¥ä»¥<<<Dg,Db,Ns,S>>>
+	çš„å½¢å¼è®¾ç½®æ‰§è¡Œé…ç½®,å…¶ä¸­ï¼šDgæ˜¯ä¸€ä¸ªdim3å‹å˜é‡,ç”¨äºè®¾ç½®gridçš„ç»´åº¦å’Œå„ä¸ª
+	ç»´åº¦ä¸Šçš„å°ºå¯¸.è®¾ç½®å¥½Dgå,gridä¸­å°†æœ‰Dg.x*Dg.y*Dg.zä¸ªblock;Dbæ˜¯
+	ä¸€ä¸ªdim3å‹å˜é‡,ç”¨äºè®¾ç½®blockçš„ç»´åº¦å’Œå„ä¸ªç»´åº¦ä¸Šçš„å°ºå¯¸.è®¾ç½®å¥½Dbå,æ¯ä¸ª
+	blockä¸­å°†æœ‰Db.x*Db.y*Db.zä¸ªthread;Nsæ˜¯ä¸€ä¸ªsize_tå‹å˜é‡,æŒ‡å®šå„å—ä¸ºæ­¤è°ƒ
+	ç”¨åŠ¨æ€åˆ†é…çš„å…±äº«å­˜å‚¨å™¨å¤§å°,è¿™äº›åŠ¨æ€åˆ†é…çš„å­˜å‚¨å™¨å¯ä¾›å£°æ˜ä¸ºå¤–éƒ¨æ•°ç»„
+	(extern __shared__)çš„å…¶ä»–ä»»ä½•å˜é‡ä½¿ç”¨;Nsæ˜¯ä¸€ä¸ªå¯é€‰å‚æ•°,é»˜è®¤å€¼ä¸º0;Sä¸º
+	cudaStream_tç±»å‹,ç”¨äºè®¾ç½®ä¸å†…æ ¸å‡½æ•°å…³è”çš„æµ.Sæ˜¯ä¸€ä¸ªå¯é€‰å‚æ•°,é»˜è®¤å€¼0. */
 	float_to_color << <blocks, threads >> >(dev_image, dev_inSrc);
 
 	cudaMemcpy(ptr, dev_image, length2, cudaMemcpyDeviceToHost);
 
-	// cudaFree: ÊÍ·ÅÉè±¸ÉÏÓÉcudaMallocº¯Êı·ÖÅäµÄÄÚ´æ
+	// cudaFree: é‡Šæ”¾è®¾å¤‡ä¸Šç”±cudaMallocå‡½æ•°åˆ†é…çš„å†…å­˜
 	cudaFree(dev_inSrc);
 	cudaFree(dev_outSrc);
 	cudaFree(dev_constSrc);
 	cudaFree(dev_image);
 
-	// cudaEventRecord: ¼ÇÂ¼Ò»¸öÊÂ¼ş,Òì²½Æô¶¯,stop¼ÇÂ¼½áÊøÊ±¼ä
+	// cudaEventRecord: è®°å½•ä¸€ä¸ªäº‹ä»¶,å¼‚æ­¥å¯åŠ¨,stopè®°å½•ç»“æŸæ—¶é—´
 	cudaEventRecord(stop, 0);
-	// cudaEventSynchronize: ÊÂ¼şÍ¬²½,µÈ´ıÒ»¸öÊÂ¼şÍê³É,Òì²½Æô¶¯
+	// cudaEventSynchronize: äº‹ä»¶åŒæ­¥,ç­‰å¾…ä¸€ä¸ªäº‹ä»¶å®Œæˆ,å¼‚æ­¥å¯åŠ¨
 	cudaEventSynchronize(stop);
-	// cudaEventElapseTime: ¼ÆËãÁ½¸öÊÂ¼şÖ®¼ä¾­ÀúµÄÊ±¼ä,µ¥Î»ÎªºÁÃë,Òì²½Æô¶¯
+	// cudaEventElapseTime: è®¡ç®—ä¸¤ä¸ªäº‹ä»¶ä¹‹é—´ç»å†çš„æ—¶é—´,å•ä½ä¸ºæ¯«ç§’,å¼‚æ­¥å¯åŠ¨
 	cudaEventElapsedTime(elapsed_time, start, stop);
-	// cudaEventDestroy: Ïú»ÙÊÂ¼ş¶ÔÏó,Òì²½Æô¶¯
+	// cudaEventDestroy: é”€æ¯äº‹ä»¶å¯¹è±¡,å¼‚æ­¥å¯åŠ¨
 	cudaEventDestroy(start);
 	cudaEventDestroy(stop);
 
@@ -196,9 +196,9 @@ static int heat_conduction_gpu_3(unsigned char* ptr, int width, int height, cons
 int heat_conduction_gpu(unsigned char* ptr, int width, int height, const float* src, float speed, float* elapsed_time)
 {
 	int ret{ 0 };
-	ret = heat_conduction_gpu_1(ptr, width, height, src, speed, elapsed_time); // Ã»ÓĞ²ÉÓÃÎÆÀíÄÚ´æ
-	//ret = heat_conduction_gpu_2(ptr, width, height, src, speed, elapsed_time); // ²ÉÓÃÒ»Î¬ÎÆÀíÄÚ´æ
-	//ret = heat_conduction_gpu_3(ptr, width, height, src, speed, elapsed_time); // ²ÉÓÃ¶şÎ¬ÎÆÀíÄÚ´æ
+	ret = heat_conduction_gpu_1(ptr, width, height, src, speed, elapsed_time); // æ²¡æœ‰é‡‡ç”¨çº¹ç†å†…å­˜
+	//ret = heat_conduction_gpu_2(ptr, width, height, src, speed, elapsed_time); // é‡‡ç”¨ä¸€ç»´çº¹ç†å†…å­˜
+	//ret = heat_conduction_gpu_3(ptr, width, height, src, speed, elapsed_time); // é‡‡ç”¨äºŒç»´çº¹ç†å†…å­˜
 
 	return ret;
 }

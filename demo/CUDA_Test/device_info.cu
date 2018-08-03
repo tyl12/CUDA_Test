@@ -9,99 +9,99 @@
 int get_device_info()
 {
 	int device_count{ 0 };
-	// cudaGetDeviceCount: »ñµÃ¼ÆËãÄÜÁ¦Éè±¸µÄÊıÁ¿
+	// cudaGetDeviceCount: è·å¾—è®¡ç®—èƒ½åŠ›è®¾å¤‡çš„æ•°é‡
 	cudaGetDeviceCount(&device_count);
-	fprintf(stdout, "GPUÉè±¸µÄÊıÁ¿£º %d\n", device_count);
+	fprintf(stdout, "GPUè®¾å¤‡çš„æ•°é‡ï¼š %d\n", device_count);
 
 	for (int dev = 0; dev < device_count; ++dev) {
 		int driver_version{ 0 }, runtime_version{ 0 };
 
-		/* cudaSetDevice: ÉèÖÃGPUÖ´ĞĞÊ±Ê¹ÓÃµÄÉè±¸£¬0±íÊ¾ÄÜËÑË÷µ½µÄµÚÒ»
-		¸öÉè±¸ºÅ£¬Èç¹ûÓĞ¶à¸öÉè±¸£¬Ôò±àºÅÎª0,1,2... */
+		/* cudaSetDevice: è®¾ç½®GPUæ‰§è¡Œæ—¶ä½¿ç”¨çš„è®¾å¤‡ï¼Œ0è¡¨ç¤ºèƒ½æœç´¢åˆ°çš„ç¬¬ä¸€
+		ä¸ªè®¾å¤‡å·ï¼Œå¦‚æœæœ‰å¤šä¸ªè®¾å¤‡ï¼Œåˆ™ç¼–å·ä¸º0,1,2... */
 		cudaSetDevice(dev);
 
-		/* cudaDeviceProp: Éè±¸ÊôĞÔ½á¹¹Ìå
-		name: Éè±¸Ãû×Ö£¬ÈçGeForce 940MX
-		totalGlobalMem£º Éè±¸ÉÏ¿ÉÓÃµÄÈ«¾ÖÄÚ´æ×ÜÁ¿(×Ö½Ú)
-		sharedMemPerBlock: Ã¿Ò»¸öÏß³Ì¿éÉÏ¿ÉÓÃµÄ¹²ÏíÄÚ´æ×ÜÁ¿(×Ö½Ú)
-		regsPerBlock: Ã¿Ò»¸öÏß³Ì¿éÉÏ¿ÉÓÃµÄ32Î»¼Ä´æÆ÷ÊıÁ¿
-		warpSize£º Ò»¸öÏß³ÌÊø°üº¬µÄÏß³ÌÊıÁ¿£¬ÔÚÊµ¼ÊÔËĞĞÖĞ£¬Ïß³Ì¿é»á±»·Ö¸î³É¸üĞ¡µÄÏß³ÌÊø(warp)£¬
-		           Ïß³ÌÊøÖĞµÄÃ¿¸öÏß³Ì¶¼½«ÔÚ²»Í¬Êı¾İÉÏÖ´ĞĞÏàÍ¬µÄÃüÁî
-		memPitch: ÔÚÄÚ´æ¿½±´ÖĞÔÊĞíµÄ×î´ópitchÊı(×Ö½Ú)
-		maxThreadsPerBlock: Ã¿Ò»¸öÏß³Ì¿éÖĞÖ§³ÖµÄ×î´óÏß³ÌÊıÁ¿
-		maxThreadsDim[3]: Ã¿Ò»¸öÏß³Ì¿éµÄÃ¿¸öÎ¬¶ÈµÄ×î´ó´óĞ¡(x,y,z)
-		maxGridSize: Ã¿Ò»¸öÏß³Ì¸ñµÄÃ¿¸öÎ¬¶ÈµÄ×î´ó´óĞ¡(x,y,z)
-		clockRate£º GPU×î´óÊ±ÖÓÆµÂÊ(Ç§ºÕ×È)
-		totalConstMem: Éè±¸ÉÏ¿ÉÓÃµÄ³£Á¿ÄÚ´æ×ÜÁ¿(×Ö½Ú)
-		major: Éè±¸¼ÆËãÄÜÁ¦Ö÷°æ±¾ºÅ£¬Éè±¸¼ÆËãÄÜÁ¦µÄ°æ±¾ÃèÊöÁËÒ»ÖÖGPU¶ÔCUDA¹¦ÄÜµÄÖ§³Ö³Ì¶È
-		minor: Éè±¸¼ÆËãÄÜÁ¦´Î°æ±¾ºÅ
-		textureAlignment: ÎÆÀí¶ÔÆëÒªÇó
-		deviceOverlap: GPUÊÇ·ñÖ§³ÖÉè±¸ÖØµş(Device Overlap)¹¦ÄÜ,Ö§³ÖÉè±¸ÖØµş¹¦ÄÜµÄGPUÄÜ¹»
-		               ÔÚÖ´ĞĞÒ»¸öCUDA CºËº¯ÊıµÄÍ¬Ê±£¬»¹ÄÜÔÚÉè±¸ÓëÖ÷»úÖ®¼äÖ´ĞĞ¸´ÖÆµÈ²Ù×÷,
-			       ÒÑ·ÏÆú£¬Ê¹ÓÃasyncEngineCount´úÌæ
-		multiProcessorCount: Éè±¸ÉÏ¶à´¦ÀíÆ÷µÄÊıÁ¿
-		kernelExecTimeoutEnabled: Ö¸¶¨Ö´ĞĞºËº¯ÊıÊ±ÊÇ·ñÓĞÔËĞĞÊ±¼äÏŞÖÆ
-		integrated: Éè±¸ÊÇ·ñÊÇÒ»¸ö¼¯³ÉGPU
-		canMapHostMemory: Éè±¸ÊÇ·ñÖ§³ÖÓ³ÉäÖ÷»úÄÚ´æ£¬¿É×÷ÎªÊÇ·ñÖ§³ÖÁã¿½±´ÄÚ´æµÄÅĞ¶ÏÌõ¼ş
-		computeMode: CUDAÉè±¸¼ÆËãÄ£Ê½£¬¿É²Î¿¼cudaComputeMode
-		maxTexture1D: Ò»Î¬ÎÆÀíÖ§³ÖµÄ×î´ó´óĞ¡
-		maxTexture2D[2]£º¶şÎ¬ÎÆÀíÖ§³ÖµÄ×î´ó´óĞ¡(x,y)
-		maxTexture3D[3]: ÈıÎ¬ÎÆÀíÖ§³ÖµÄ×î´ó´óĞ¡(x,y,z)
-		memoryClockRate: ÄÚ´æÊ±ÖÓÆµÂÊ·åÖµ(Ç§ºÕ×È)
-		memoryBusWidth: È«¾ÖÄÚ´æ×ÜÏß¿í¶È(bits)
-		l2CacheSize: L2»º´æ´óĞ¡(×Ö½Ú)
-		maxThreadsPerMultiProcessor£º Ã¿¸ö¶à´¦ÀíÆ÷Ö§³ÖµÄ×î´óÏß³ÌÊıÁ¿
-		concurrentKernels: Éè±¸ÊÇ·ñÖ§³ÖÍ¬Ê±Ö´ĞĞ¶à¸öºËº¯Êı
-		asyncEngineCount: Òì²½ÒıÇæÊıÁ¿
-		unifiedAddressing: ÊÇ·ñÖ§³ÖÉè±¸ÓëÖ÷»ú¹²ÏíÒ»¸öÍ³Ò»µÄµØÖ·¿Õ¼ä
+		/* cudaDeviceProp: è®¾å¤‡å±æ€§ç»“æ„ä½“
+		name: è®¾å¤‡åå­—ï¼Œå¦‚GeForce 940MX
+		totalGlobalMemï¼š è®¾å¤‡ä¸Šå¯ç”¨çš„å…¨å±€å†…å­˜æ€»é‡(å­—èŠ‚)
+		sharedMemPerBlock: æ¯ä¸€ä¸ªçº¿ç¨‹å—ä¸Šå¯ç”¨çš„å…±äº«å†…å­˜æ€»é‡(å­—èŠ‚)
+		regsPerBlock: æ¯ä¸€ä¸ªçº¿ç¨‹å—ä¸Šå¯ç”¨çš„32ä½å¯„å­˜å™¨æ•°é‡
+		warpSizeï¼š ä¸€ä¸ªçº¿ç¨‹æŸåŒ…å«çš„çº¿ç¨‹æ•°é‡ï¼Œåœ¨å®é™…è¿è¡Œä¸­ï¼Œçº¿ç¨‹å—ä¼šè¢«åˆ†å‰²æˆæ›´å°çš„çº¿ç¨‹æŸ(warp)ï¼Œ
+		           çº¿ç¨‹æŸä¸­çš„æ¯ä¸ªçº¿ç¨‹éƒ½å°†åœ¨ä¸åŒæ•°æ®ä¸Šæ‰§è¡Œç›¸åŒçš„å‘½ä»¤
+		memPitch: åœ¨å†…å­˜æ‹·è´ä¸­å…è®¸çš„æœ€å¤§pitchæ•°(å­—èŠ‚)
+		maxThreadsPerBlock: æ¯ä¸€ä¸ªçº¿ç¨‹å—ä¸­æ”¯æŒçš„æœ€å¤§çº¿ç¨‹æ•°é‡
+		maxThreadsDim[3]: æ¯ä¸€ä¸ªçº¿ç¨‹å—çš„æ¯ä¸ªç»´åº¦çš„æœ€å¤§å¤§å°(x,y,z)
+		maxGridSize: æ¯ä¸€ä¸ªçº¿ç¨‹æ ¼çš„æ¯ä¸ªç»´åº¦çš„æœ€å¤§å¤§å°(x,y,z)
+		clockRateï¼š GPUæœ€å¤§æ—¶é’Ÿé¢‘ç‡(åƒèµ«å…¹)
+		totalConstMem: è®¾å¤‡ä¸Šå¯ç”¨çš„å¸¸é‡å†…å­˜æ€»é‡(å­—èŠ‚)
+		major: è®¾å¤‡è®¡ç®—èƒ½åŠ›ä¸»ç‰ˆæœ¬å·ï¼Œè®¾å¤‡è®¡ç®—èƒ½åŠ›çš„ç‰ˆæœ¬æè¿°äº†ä¸€ç§GPUå¯¹CUDAåŠŸèƒ½çš„æ”¯æŒç¨‹åº¦
+		minor: è®¾å¤‡è®¡ç®—èƒ½åŠ›æ¬¡ç‰ˆæœ¬å·
+		textureAlignment: çº¹ç†å¯¹é½è¦æ±‚
+		deviceOverlap: GPUæ˜¯å¦æ”¯æŒè®¾å¤‡é‡å (Device Overlap)åŠŸèƒ½,æ”¯æŒè®¾å¤‡é‡å åŠŸèƒ½çš„GPUèƒ½å¤Ÿ
+		               åœ¨æ‰§è¡Œä¸€ä¸ªCUDA Cæ ¸å‡½æ•°çš„åŒæ—¶ï¼Œè¿˜èƒ½åœ¨è®¾å¤‡ä¸ä¸»æœºä¹‹é—´æ‰§è¡Œå¤åˆ¶ç­‰æ“ä½œ,
+			       å·²åºŸå¼ƒï¼Œä½¿ç”¨asyncEngineCountä»£æ›¿
+		multiProcessorCount: è®¾å¤‡ä¸Šå¤šå¤„ç†å™¨çš„æ•°é‡
+		kernelExecTimeoutEnabled: æŒ‡å®šæ‰§è¡Œæ ¸å‡½æ•°æ—¶æ˜¯å¦æœ‰è¿è¡Œæ—¶é—´é™åˆ¶
+		integrated: è®¾å¤‡æ˜¯å¦æ˜¯ä¸€ä¸ªé›†æˆGPU
+		canMapHostMemory: è®¾å¤‡æ˜¯å¦æ”¯æŒæ˜ å°„ä¸»æœºå†…å­˜ï¼Œå¯ä½œä¸ºæ˜¯å¦æ”¯æŒé›¶æ‹·è´å†…å­˜çš„åˆ¤æ–­æ¡ä»¶
+		computeMode: CUDAè®¾å¤‡è®¡ç®—æ¨¡å¼ï¼Œå¯å‚è€ƒcudaComputeMode
+		maxTexture1D: ä¸€ç»´çº¹ç†æ”¯æŒçš„æœ€å¤§å¤§å°
+		maxTexture2D[2]ï¼šäºŒç»´çº¹ç†æ”¯æŒçš„æœ€å¤§å¤§å°(x,y)
+		maxTexture3D[3]: ä¸‰ç»´çº¹ç†æ”¯æŒçš„æœ€å¤§å¤§å°(x,y,z)
+		memoryClockRate: å†…å­˜æ—¶é’Ÿé¢‘ç‡å³°å€¼(åƒèµ«å…¹)
+		memoryBusWidth: å…¨å±€å†…å­˜æ€»çº¿å®½åº¦(bits)
+		l2CacheSize: L2ç¼“å­˜å¤§å°(å­—èŠ‚)
+		maxThreadsPerMultiProcessorï¼š æ¯ä¸ªå¤šå¤„ç†å™¨æ”¯æŒçš„æœ€å¤§çº¿ç¨‹æ•°é‡
+		concurrentKernels: è®¾å¤‡æ˜¯å¦æ”¯æŒåŒæ—¶æ‰§è¡Œå¤šä¸ªæ ¸å‡½æ•°
+		asyncEngineCount: å¼‚æ­¥å¼•æ“æ•°é‡
+		unifiedAddressing: æ˜¯å¦æ”¯æŒè®¾å¤‡ä¸ä¸»æœºå…±äº«ä¸€ä¸ªç»Ÿä¸€çš„åœ°å€ç©ºé—´
 		*/
 		cudaDeviceProp device_prop;
-		/* cudaGetDeviceProperties: »ñÈ¡Ö¸¶¨µÄGPUÉè±¸ÊôĞÔÏà¹ØĞÅÏ¢ */
+		/* cudaGetDeviceProperties: è·å–æŒ‡å®šçš„GPUè®¾å¤‡å±æ€§ç›¸å…³ä¿¡æ¯ */
 		cudaGetDeviceProperties(&device_prop, dev);
 
-		fprintf(stdout, "\nÉè±¸ %d Ãû×Ö: %s\n", dev, device_prop.name);
+		fprintf(stdout, "\nè®¾å¤‡ %d åå­—: %s\n", dev, device_prop.name);
 
-		/* cudaDriverGetVersion: »ñÈ¡CUDAÇı¶¯°æ±¾ */
+		/* cudaDriverGetVersion: è·å–CUDAé©±åŠ¨ç‰ˆæœ¬ */
 		cudaDriverGetVersion(&driver_version);
-		fprintf(stdout, "CUDAÇı¶¯°æ±¾£º %d.%d\n", driver_version/1000, (driver_version%1000)/10);
-		/* cudaRuntimeGetVersion: »ñÈ¡CUDAÔËĞĞÊ±°æ±¾ */
+		fprintf(stdout, "CUDAé©±åŠ¨ç‰ˆæœ¬ï¼š %d.%d\n", driver_version/1000, (driver_version%1000)/10);
+		/* cudaRuntimeGetVersion: è·å–CUDAè¿è¡Œæ—¶ç‰ˆæœ¬ */
 		cudaRuntimeGetVersion(&runtime_version);
-		fprintf(stdout, "CUDAÔËĞĞÊ±°æ±¾£º %d.%d\n", runtime_version/1000, (runtime_version%1000)/10);
+		fprintf(stdout, "CUDAè¿è¡Œæ—¶ç‰ˆæœ¬ï¼š %d.%d\n", runtime_version/1000, (runtime_version%1000)/10);
 
-		fprintf(stdout, "Éè±¸¼ÆËãÄÜÁ¦£º %d.%d\n", device_prop.major, device_prop.minor);
-		fprintf(stdout, "Éè±¸ÉÏ¿ÉÓÃµÄÈ«¾ÖÄÚ´æ×ÜÁ¿£º %f MB, %llu bytes\n",
+		fprintf(stdout, "è®¾å¤‡è®¡ç®—èƒ½åŠ›ï¼š %d.%d\n", device_prop.major, device_prop.minor);
+		fprintf(stdout, "è®¾å¤‡ä¸Šå¯ç”¨çš„å…¨å±€å†…å­˜æ€»é‡ï¼š %f MB, %llu bytes\n",
 			(float)device_prop.totalGlobalMem / (1024 * 1024), (unsigned long long)device_prop.totalGlobalMem);
-		fprintf(stdout, "Ã¿Ò»¸öÏß³Ì¿éÉÏ¿ÉÓÃµÄ¹²ÏíÄÚ´æ×ÜÁ¿£º %f KB, %lu bytes\n",
+		fprintf(stdout, "æ¯ä¸€ä¸ªçº¿ç¨‹å—ä¸Šå¯ç”¨çš„å…±äº«å†…å­˜æ€»é‡ï¼š %f KB, %lu bytes\n",
 			(float)device_prop.sharedMemPerBlock / 1024, device_prop.sharedMemPerBlock);
-		fprintf(stdout, "Ã¿Ò»¸öÏß³Ì¿éÉÏ¿ÉÓÃµÄ32Î»¼Ä´æÆ÷ÊıÁ¿: %d\n", device_prop.regsPerBlock);
-		fprintf(stdout, "Ò»¸öÏß³ÌÊø°üº¬µÄÏß³ÌÊıÁ¿£º %d\n", device_prop.warpSize);
-		fprintf(stdout, "ÔÚÄÚ´æ¿½±´ÖĞÔÊĞíµÄ×î´ópitchÊı: %d bytes\n", device_prop.memPitch);
-		fprintf(stdout, "Ã¿Ò»¸öÏß³Ì¿éÖĞÖ§³ÖµÄ×î´óÏß³ÌÊıÁ¿: %d\n", device_prop.maxThreadsPerBlock);
-		fprintf(stdout, "Ã¿Ò»¸öÏß³Ì¿éµÄÃ¿¸öÎ¬¶ÈµÄ×î´ó´óĞ¡(x,y,z): (%d, %d, %d)\n",
+		fprintf(stdout, "æ¯ä¸€ä¸ªçº¿ç¨‹å—ä¸Šå¯ç”¨çš„32ä½å¯„å­˜å™¨æ•°é‡: %d\n", device_prop.regsPerBlock);
+		fprintf(stdout, "ä¸€ä¸ªçº¿ç¨‹æŸåŒ…å«çš„çº¿ç¨‹æ•°é‡ï¼š %d\n", device_prop.warpSize);
+		fprintf(stdout, "åœ¨å†…å­˜æ‹·è´ä¸­å…è®¸çš„æœ€å¤§pitchæ•°: %d bytes\n", device_prop.memPitch);
+		fprintf(stdout, "æ¯ä¸€ä¸ªçº¿ç¨‹å—ä¸­æ”¯æŒçš„æœ€å¤§çº¿ç¨‹æ•°é‡: %d\n", device_prop.maxThreadsPerBlock);
+		fprintf(stdout, "æ¯ä¸€ä¸ªçº¿ç¨‹å—çš„æ¯ä¸ªç»´åº¦çš„æœ€å¤§å¤§å°(x,y,z): (%d, %d, %d)\n",
 			device_prop.maxThreadsDim[0], device_prop.maxThreadsDim[1], device_prop.maxThreadsDim[2]);
-		fprintf(stdout, "Ã¿Ò»¸öÏß³Ì¸ñµÄÃ¿¸öÎ¬¶ÈµÄ×î´ó´óĞ¡(x,y,z): (%d, %d, %d)\n",
+		fprintf(stdout, "æ¯ä¸€ä¸ªçº¿ç¨‹æ ¼çš„æ¯ä¸ªç»´åº¦çš„æœ€å¤§å¤§å°(x,y,z): (%d, %d, %d)\n",
 			device_prop.maxGridSize[0], device_prop.maxGridSize[1], device_prop.maxGridSize[2]);
-		fprintf(stdout, "GPU×î´óÊ±ÖÓÆµÂÊ: %.0f MHz (%0.2f GHz)\n",
+		fprintf(stdout, "GPUæœ€å¤§æ—¶é’Ÿé¢‘ç‡: %.0f MHz (%0.2f GHz)\n",
 			device_prop.clockRate*1e-3f, device_prop.clockRate*1e-6f);
-		fprintf(stdout, "Éè±¸ÉÏ¿ÉÓÃµÄ³£Á¿ÄÚ´æ×ÜÁ¿: %lu bytes\n", device_prop.totalConstMem);
-		fprintf(stdout, "ÎÆÀí¶ÔÆëÒªÇó: %lu bytes\n", device_prop.textureAlignment);
-		fprintf(stdout, "ÊÇ·ñÖ§³ÖÉè±¸ÖØµş¹¦ÄÜ: %s\n", device_prop.deviceOverlap ? "Yes" : "No");
-		fprintf(stdout, "Éè±¸ÉÏ¶à´¦ÀíÆ÷µÄÊıÁ¿: %d\n", device_prop.multiProcessorCount);
-		fprintf(stdout, "Ö´ĞĞºËº¯ÊıÊ±ÊÇ·ñÓĞÔËĞĞÊ±¼äÏŞÖÆ: %s\n", device_prop.kernelExecTimeoutEnabled ? "Yes" : "No");
-		fprintf(stdout, "Éè±¸ÊÇ·ñÊÇÒ»¸ö¼¯³ÉGPU: %s\n", device_prop.integrated ? "Yes" : "No");
-		fprintf(stdout, "Éè±¸ÊÇ·ñÖ§³ÖÓ³ÉäÖ÷»úÄÚ´æ: %s\n", device_prop.canMapHostMemory ? "Yes" : "No");
-		fprintf(stdout, "CUDAÉè±¸¼ÆËãÄ£Ê½: %d\n", device_prop.computeMode);
-		fprintf(stdout, "Ò»Î¬ÎÆÀíÖ§³ÖµÄ×î´ó´óĞ¡: %d\n", device_prop.maxTexture1D);
-		fprintf(stdout, "¶şÎ¬ÎÆÀíÖ§³ÖµÄ×î´ó´óĞ¡(x,y): (%d, %d)\n", device_prop.maxTexture2D[0], device_prop.maxSurface2D[1]);
-		fprintf(stdout, "ÈıÎ¬ÎÆÀíÖ§³ÖµÄ×î´ó´óĞ¡(x,y,z): (%d, %d, %d)\n",
+		fprintf(stdout, "è®¾å¤‡ä¸Šå¯ç”¨çš„å¸¸é‡å†…å­˜æ€»é‡: %lu bytes\n", device_prop.totalConstMem);
+		fprintf(stdout, "çº¹ç†å¯¹é½è¦æ±‚: %lu bytes\n", device_prop.textureAlignment);
+		fprintf(stdout, "æ˜¯å¦æ”¯æŒè®¾å¤‡é‡å åŠŸèƒ½: %s\n", device_prop.deviceOverlap ? "Yes" : "No");
+		fprintf(stdout, "è®¾å¤‡ä¸Šå¤šå¤„ç†å™¨çš„æ•°é‡: %d\n", device_prop.multiProcessorCount);
+		fprintf(stdout, "æ‰§è¡Œæ ¸å‡½æ•°æ—¶æ˜¯å¦æœ‰è¿è¡Œæ—¶é—´é™åˆ¶: %s\n", device_prop.kernelExecTimeoutEnabled ? "Yes" : "No");
+		fprintf(stdout, "è®¾å¤‡æ˜¯å¦æ˜¯ä¸€ä¸ªé›†æˆGPU: %s\n", device_prop.integrated ? "Yes" : "No");
+		fprintf(stdout, "è®¾å¤‡æ˜¯å¦æ”¯æŒæ˜ å°„ä¸»æœºå†…å­˜: %s\n", device_prop.canMapHostMemory ? "Yes" : "No");
+		fprintf(stdout, "CUDAè®¾å¤‡è®¡ç®—æ¨¡å¼: %d\n", device_prop.computeMode);
+		fprintf(stdout, "ä¸€ç»´çº¹ç†æ”¯æŒçš„æœ€å¤§å¤§å°: %d\n", device_prop.maxTexture1D);
+		fprintf(stdout, "äºŒç»´çº¹ç†æ”¯æŒçš„æœ€å¤§å¤§å°(x,y): (%d, %d)\n", device_prop.maxTexture2D[0], device_prop.maxSurface2D[1]);
+		fprintf(stdout, "ä¸‰ç»´çº¹ç†æ”¯æŒçš„æœ€å¤§å¤§å°(x,y,z): (%d, %d, %d)\n",
 			device_prop.maxTexture3D[0], device_prop.maxSurface3D[1], device_prop.maxSurface3D[2]);
-		fprintf(stdout, "ÄÚ´æÊ±ÖÓÆµÂÊ·åÖµ: %.0f Mhz\n", device_prop.memoryClockRate * 1e-3f);
-		fprintf(stdout, "È«¾ÖÄÚ´æ×ÜÏß¿í¶È: %d bits\n", device_prop.memoryBusWidth);
-		fprintf(stdout, "L2»º´æ´óĞ¡: %d bytes\n", device_prop.l2CacheSize);
-		fprintf(stdout, "Ã¿¸ö¶à´¦ÀíÆ÷Ö§³ÖµÄ×î´óÏß³ÌÊıÁ¿: %d\n", device_prop.maxThreadsPerMultiProcessor);
-		fprintf(stdout, "Éè±¸ÊÇ·ñÖ§³ÖÍ¬Ê±Ö´ĞĞ¶à¸öºËº¯Êı: %s\n", device_prop.concurrentKernels ? "Yes" : "No");
-		fprintf(stdout, "Òì²½ÒıÇæÊıÁ¿: %d\n", device_prop.asyncEngineCount);
-		fprintf(stdout, "ÊÇ·ñÖ§³ÖÉè±¸ÓëÖ÷»ú¹²ÏíÒ»¸öÍ³Ò»µÄµØÖ·¿Õ¼ä: %s\n", device_prop.unifiedAddressing ? "Yes" : "No");
+		fprintf(stdout, "å†…å­˜æ—¶é’Ÿé¢‘ç‡å³°å€¼: %.0f Mhz\n", device_prop.memoryClockRate * 1e-3f);
+		fprintf(stdout, "å…¨å±€å†…å­˜æ€»çº¿å®½åº¦: %d bits\n", device_prop.memoryBusWidth);
+		fprintf(stdout, "L2ç¼“å­˜å¤§å°: %d bytes\n", device_prop.l2CacheSize);
+		fprintf(stdout, "æ¯ä¸ªå¤šå¤„ç†å™¨æ”¯æŒçš„æœ€å¤§çº¿ç¨‹æ•°é‡: %d\n", device_prop.maxThreadsPerMultiProcessor);
+		fprintf(stdout, "è®¾å¤‡æ˜¯å¦æ”¯æŒåŒæ—¶æ‰§è¡Œå¤šä¸ªæ ¸å‡½æ•°: %s\n", device_prop.concurrentKernels ? "Yes" : "No");
+		fprintf(stdout, "å¼‚æ­¥å¼•æ“æ•°é‡: %d\n", device_prop.asyncEngineCount);
+		fprintf(stdout, "æ˜¯å¦æ”¯æŒè®¾å¤‡ä¸ä¸»æœºå…±äº«ä¸€ä¸ªç»Ÿä¸€çš„åœ°å€ç©ºé—´: %s\n", device_prop.unifiedAddressing ? "Yes" : "No");
 	}
 
 	return 0;

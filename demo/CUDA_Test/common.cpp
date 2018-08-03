@@ -28,8 +28,8 @@ int check_Cuda(T result, const char * const func, const char * const file, const
 
 void generator_random_number(float* data, int length, float a, float b)
 {
-	std::random_device rd; std::mt19937 generator(rd()); // Ã¿´Î²úÉú²»¹Ì¶¨µÄ²»Í¬µÄÖµ
-	//std::default_random_engine generator; // Ã¿´Î²úÉú¹Ì¶¨µÄ²»Í¬µÄÖµ
+	std::random_device rd; std::mt19937 generator(rd()); // æ¯æ¬¡äº§ç”Ÿä¸å›ºå®šçš„ä¸åŒçš„å€¼
+	//std::default_random_engine generator; // æ¯æ¬¡äº§ç”Ÿå›ºå®šçš„ä¸åŒçš„å€¼
 	std::uniform_real_distribution<float> distribution(a, b);
 	for (int i = 0; i < length; ++i) {
 		data[i] = distribution(generator);
@@ -39,8 +39,8 @@ void generator_random_number(float* data, int length, float a, float b)
 template<typename T> // unsigned char, char, int , short
 void generator_random_number(T* data, int length, T a, T b)
 {
-	std::random_device rd; std::mt19937 generator(rd()); // Ã¿´Î²úÉú²»¹Ì¶¨µÄ²»Í¬µÄÖµ
-	//std::default_random_engine generator; // Ã¿´Î²úÉú¹Ì¶¨µÄ²»Í¬µÄÖµ
+	std::random_device rd; std::mt19937 generator(rd()); // æ¯æ¬¡äº§ç”Ÿä¸å›ºå®šçš„ä¸åŒçš„å€¼
+	//std::default_random_engine generator; // æ¯æ¬¡äº§ç”Ÿå›ºå®šçš„ä¸åŒçš„å€¼
 	std::uniform_int_distribution<int> distribution(a, b);
 	for (int i = 0; i < length; ++i) {
 		data[i] = static_cast<T>(distribution(generator));

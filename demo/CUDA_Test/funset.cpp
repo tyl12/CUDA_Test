@@ -10,7 +10,11 @@
 int test_image_process_laplacian()
 {
 	// Blog: http://blog.csdn.net/fengbingchun/article/details/79321200
+#ifdef __linux__
+	cv::Mat src = cv::imread("test_data/images/lena.png", 0);
+#else
 	cv::Mat src = cv::imread("E:/GitCode/CUDA_Test/test_data/images/lena.png", 0);
+#endif
 	if (!src.data || src.channels() != 1) {
 		fprintf(stderr, "read image fail\n");
 		return -1;
@@ -29,12 +33,20 @@ int test_image_process_laplacian()
 
 	cv::Mat dst;
 	cv::Laplacian(src, dst, src.depth(), ksize);
+#ifdef __linux__
+	cv::imwrite("test_data/images/laplacian.png", dst);
+#else
 	cv::imwrite("E:/GitCode/CUDA_Test/test_data/images/laplacian.png", dst);
+#endif
 
 	CHECK(compare_result(data1.get(), dst.data, width*height) == 0);
 	//CHECK(compare_result(data1.get(), data2.get(), width*height) == 0);
 
+#ifdef __linux__
+	save_image(src, dst, width, height / 2, "test_data/images/laplacian_result.png");
+#else
 	save_image(src, dst, width, height / 2, "E:/GitCode/CUDA_Test/test_data/images/laplacian_result.png");
+#endif
 
 	return 0;
 }
@@ -42,7 +54,11 @@ int test_image_process_laplacian()
 int test_image_process_histogram_equalization()
 {
 	// Blog: http://blog.csdn.net/fengbingchun/article/details/79188021
+#ifdef __linux__
+	const std::string image_name{ "test_data/images/lena.png" };
+#else
 	const std::string image_name{ "E:/GitCode/CUDA_Test/test_data/images/lena.png" };
+#endif
 	cv::Mat mat = cv::imread(image_name, 0);
 	CHECK(mat.data);
 
@@ -59,12 +75,20 @@ int test_image_process_histogram_equalization()
 
 	cv::Mat dst;
 	cv::equalizeHist(mat, dst);
+#ifdef __linux__
+	cv::imwrite("test_data/images/histogram_equalization.png", dst);
+#else
 	cv::imwrite("E:/GitCode/CUDA_Test/test_data/images/histogram_equalization.png", dst);
+#endif
 
 	CHECK(compare_result(data1.get(), dst.data, width*height) == 0);
 	//CHECK(compare_result(data1.get(), data2.get(), width*height) == 0);
 
+#ifdef __linux__
+	save_image(mat, dst, width, height/2, "test_data/images/histogram_equalization_result.png");
+#else
 	save_image(mat, dst, width, height/2, "E:/GitCode/CUDA_Test/test_data/images/histogram_equalization_result.png");
+#endif
 
 	return 0;
 }
@@ -72,7 +96,11 @@ int test_image_process_histogram_equalization()
 int test_image_process_bgr2bgr565()
 {
 	// Blog: http://blog.csdn.net/fengbingchun/article/details/78995720
+#ifdef __linux__
+	const std::string image_name{ "test_data/images/lena.png" };
+#else
 	const std::string image_name{ "E:/GitCode/CUDA_Test/test_data/images/lena.png" };
+#endif
 	cv::Mat mat = cv::imread(image_name, 1);
 	CHECK(mat.data);
 
@@ -99,7 +127,11 @@ int test_image_process_bgr2bgr565()
 int test_image_process_bgr2gray()
 {
 	// Blog: http://blog.csdn.net/fengbingchun/article/details/78821765
+#ifdef __linux__
+	const std::string image_name{ "test_data/images/lena.png" };
+#else
 	const std::string image_name{ "E:/GitCode/CUDA_Test/test_data/images/lena.png" };
+#endif
 	cv::Mat mat = cv::imread(image_name);
 	CHECK(mat.data);
 
@@ -113,10 +145,17 @@ int test_image_process_bgr2gray()
 	CHECK(bgr2gray_gpu(mat.data, width, height, data2.get(), &elapsed_time2) == 0);
 
 	cv::Mat dst(height, width, CV_8UC1, data1.get());
+#ifdef __linux__
+	cv::imwrite("test_data/images/bgr2gray_cpu.png", dst);
+#else
 	cv::imwrite("E:/GitCode/CUDA_Test/test_data/images/bgr2gray_cpu.png", dst);
+#endif
 	cv::Mat dst2(height, width, CV_8UC1, data2.get());
+#ifdef __linux__
+	cv::imwrite("test_data/images/bgr2gray_gpu.png", dst2);
+#else
 	cv::imwrite("E:/GitCode/CUDA_Test/test_data/images/bgr2gray_gpu.png", dst2);
-
+#endif
 	fprintf(stdout, "image bgr to gray: cpu run time: %f ms, gpu run time: %f ms\n", elapsed_time1, elapsed_time2);
 
 	CHECK(compare_result(data1.get(), data2.get(), width*height) == 0);
@@ -155,7 +194,11 @@ int test_layer_prior_vbox()
 int test_layer_reverse()
 {
 	// Blog: http://blog.csdn.net/fengbingchun/article/details/77160872
+#ifdef __linux__
+	std::string image_name{ "test_data/images/lena.png" };
+#else
 	std::string image_name{ "E:/GitCode/CUDA_Test/test_data/images/lena.png" };
+#endif
 	cv::Mat matSrc = cv::imread(image_name);
 	CHECK(matSrc.data);
 
@@ -183,7 +226,11 @@ int test_layer_reverse()
 	cv::Mat matTmp2(height, width, CV_32FC1, dst2.get()), matDst;
 	matTmp2.convertTo(matDst, CV_8UC1);
 
+#ifdef __linux__
+	save_image(matSrc, matDst, 400, 200, "test_data/images/image_reverse.png");
+#else
 	save_image(matSrc, matDst, 400, 200, "E:/GitCode/CUDA_Test/test_data/images/image_reverse.png");
+#endif
 
 	fprintf(stderr, "test layer reverse: cpu run time: %f ms, gpu run time: %f ms\n", elapsed_time1, elapsed_time2);
 
@@ -193,7 +240,11 @@ int test_layer_reverse()
 int test_layer_channel_normalize()
 {
 	// Blog: http://blog.csdn.net/fengbingchun/article/details/76976024
+#ifdef __linux__
+	std::string image_name{ "test_data/images/lena.png" };
+#else
 	std::string image_name{ "E:/GitCode/CUDA_Test/test_data/images/lena.png" };
+#endif
 	cv::Mat matSrc = cv::imread(image_name);
 	if (!matSrc.data) {
 		fprintf(stderr, "read image fail: %s\n", image_name.c_str());
@@ -238,9 +289,17 @@ int test_layer_channel_normalize()
 	cv::Mat dst3;
 	cv::merge(merge, dst3);
 	dst3.convertTo(dst3, CV_8UC3, 255.f);
+#ifdef __linux__
+	cv::imwrite("test_data/images/image_normalize.png", dst3);
+#else
 	cv::imwrite("E:/GitCode/CUDA_Test/test_data/images/image_normalize.png", dst3);
+#endif
 	//cv::resize(matSrc, matSrc, cv::Size(width, height));
+#ifdef __linux__
+	//cv::imwrite("test_data/images/image_src.png", matSrc);
+#else
 	//cv::imwrite("E:/GitCode/CUDA_Test/test_data/images/image_src.png", matSrc);
+#endif
 
 	fprintf(stderr, "test layer channel normalize: cpu run time: %f ms, gpu run time: %f ms\n", elapsed_time1, elapsed_time2);
 
@@ -260,7 +319,7 @@ int test_matrix_mul()
 {
 	// Blog: http://blog.csdn.net/fengbingchun/article/details/76618165
 	// Matrix multiplication: C = A * B
-	// æÿ’ÛA°¢BµƒøÌ°¢∏ﬂ”¶ «32µƒ’˚ ˝±∂
+	// Áü©ÈòµA„ÄÅBÁöÑÂÆΩ„ÄÅÈ´òÂ∫îÊòØ32ÁöÑÊï¥Êï∞ÂÄç
 	const int rowsA{ 352 }, colsA{ 672 }, rowsB = colsA, colsB{ 384 };
 	std::unique_ptr<float[]> A(new float[colsA*rowsA]);
 	std::unique_ptr<float[]> B(new float[colsB*rowsB]);
@@ -445,7 +504,11 @@ int test_heat_conduction()
 		}
 	}
 
+#ifdef __linux__
+	std::string save_image_name{ "test_data/heat_conduction.jpg" };
+#else
 	std::string save_image_name{ "E:/GitCode/CUDA_Test/heat_conduction.jpg" };
+#endif
 	cv::resize(mat2, mat2, cv::Size(width / 2, height / 2), 0.f, 0.f, 2);
 	cv::imwrite(save_image_name, mat2);
 
@@ -492,7 +555,11 @@ int test_ray_tracking()
 		}
 	}
 
+#ifdef __linux__
+	const std::string save_image_name{ "test_data/ray_tracking.jpg" };
+#else
 	const std::string save_image_name{ "E:/GitCode/CUDA_Test/ray_tracking.jpg" };
+#endif
 	cv::imwrite(save_image_name, mat2);
 
 	fprintf(stderr, "ray tracking: cpu run time: %f ms, gpu run time: %f ms\n", elapsed_time1, elapsed_time2);
@@ -529,7 +596,11 @@ int test_green_ball()
 		}
 	}
 
+#ifdef __linux__
+	const std::string save_image_name{ "test_data/gree_ball.jpg" };
+#else
 	const std::string save_image_name{ "E:/GitCode/CUDA_Test/gree_ball.jpg" };
+#endif
 	cv::imwrite(save_image_name, mat2);
 
 	fprintf(stderr, "test green ball: cpu run time: %f ms, gpu run time: %f ms\n", elapsed_time1, elapsed_time2);
@@ -567,7 +638,11 @@ int test_ripple()
 		}
 	}
 
+#ifdef __linux__
+	const std::string save_image_name{ "test_data/ripple.jpg" };
+#else
 	const std::string save_image_name{ "E:/GitCode/CUDA_Test/ripple.jpg" };
+#endif
 	cv::imwrite(save_image_name, mat2);
 
 	fprintf(stderr, "cpu run time: %f ms, gpu run time: %f ms\n", elapsed_time1, elapsed_time2);
@@ -605,7 +680,11 @@ int test_julia()
 		}
 	}
 
+#ifdef __linux__
+	const std::string save_image_name{ "test_data/julia.jpg" };
+#else
 	const std::string save_image_name{ "E:/GitCode/CUDA_Test/julia.jpg" };
+#endif
 	cv::imwrite(save_image_name, mat2);
 
 	fprintf(stderr, "cpu run time: %f ms, gpu run time: %f ms\n", elapsed_time1, elapsed_time2);
