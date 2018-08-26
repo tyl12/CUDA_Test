@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="Properties.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{00CBFE2A-935B-449F-A0E0-CDFD8AC93BB3}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>SimdVsx</RootNamespace>
+    <ProjectName>SimdVsx</ProjectName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <Lib>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <Lib />
+    <Lib>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <Lib>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <Lib>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\Simd\SimdBase.h" />
+    <ClInclude Include="..\..\src\Simd\SimdCompare.h" />
+    <ClInclude Include="..\..\src\Simd\SimdConversion.h" />
+    <ClInclude Include="..\..\src\Simd\SimdConfig.h" />
+    <ClInclude Include="..\..\src\Simd\SimdConst.h" />
+    <ClInclude Include="..\..\src\Simd\SimdDefs.h" />
+    <ClInclude Include="..\..\src\Simd\SimdExtract.h" />
+    <ClInclude Include="..\..\src\Simd\SimdInit.h" />
+    <ClInclude Include="..\..\src\Simd\SimdLoad.h" />
+    <ClInclude Include="..\..\src\Simd\SimdLog.h" />
+    <ClInclude Include="..\..\src\Simd\SimdMath.h" />
+    <ClInclude Include="..\..\src\Simd\SimdMemory.h" />
+    <ClInclude Include="..\..\src\Simd\SimdSet.h" />
+    <ClInclude Include="..\..\src\Simd\SimdStore.h" />
+    <ClInclude Include="..\..\src\Simd\SimdTypes.h" />
+    <ClInclude Include="..\..\src\Simd\SimdVsx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\Simd\SimdVsxAbsDifferenceSum.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxAbsGradientSaturatedSum.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxAddFeatureDifference.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxAlphaBlending.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxBackground.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxBgraToBayer.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxBgraToBgr.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxBgraToGray.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxBgraToYuv.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxBgrToBayer.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxBgrToBgra.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxBgrToGray.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxBgrToYuv.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxBinarization.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxConditional.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxDeinterleaveUv.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxEdgeBackground.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxFill.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxGaussianBlur3x3.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxGrayToBgr.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxGrayToBgra.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxHistogram.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxHog.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxInterference.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxLbp.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxMedianFilter.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxOperation.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxReduceGray2x2.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxReduceGray3x3.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxReduceGray4x4.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxReduceGray5x5.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxReorder.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxResizeBilinear.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxSegmentation.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxShiftBilinear.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxSobel.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxSquaredDifferenceSum.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxStatistic.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxStretchGray2x2.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxTexture.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxYuvToBgr.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxYuvToBgra.cpp" />
+    <ClCompile Include="..\..\src\Simd\SimdVsxYuvToHue.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

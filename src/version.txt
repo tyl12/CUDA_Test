@@ -1,0 +1,5 @@
+1. Simd:
+	version: 2.2.27
+	url: https://github.com/ermig1979/Simd
+
+
