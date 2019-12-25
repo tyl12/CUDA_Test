@@ -6,7 +6,7 @@ int long_vector_add_cpu(const float* A, const float* B, float* C, int elements_n
 	auto start = std::chrono::steady_clock::now();
 
 	for (int i = 0; i < elements_num; ++i) {
-		C[i] = A[i] + B[i];
+		C[i] = A[i] * B[i];
 	}
 
 	auto end = std::chrono::steady_clock::now();

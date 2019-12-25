@@ -136,7 +136,7 @@ int calculate_histogram_gpu(const unsigned char* data, int length, unsigned int*
 	(extern __shared__)的其他任何变量使用;Ns是一个可选参数,默认值为0;S为
 	cudaStream_t类型,用于设置与内核函数关联的流.S是一个可选参数,默认值0. */
 	// 当线程块的数量为GPU中处理器数量的2倍时，将达到最优性能
-	calculate_histogram << <blocks * 2, 256 >> >(dev_buffer, length, dev_hist);
+	calculate_histogram << <blocks * 4, 256 >> >(dev_buffer, length, dev_hist);
 
 	cudaMemcpy(hist, dev_hist, 256 * sizeof(unsigned int), cudaMemcpyDeviceToHost);
 

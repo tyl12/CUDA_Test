@@ -31,7 +31,7 @@ __global__ static void long_vector_add(const float *A, const float *B, float *C,
 		printf("blockDim.x = %d, gridDim.x = %d\n", blockDim.x, gridDim.x); // support pritnf, but don't support fprintf
 	}
 	while (tid < elements_num) {
-		C[tid] = A[tid] + B[tid];
+		C[tid] = A[tid] * B[tid];
 		tid += blockDim.x * gridDim.x;
 	}
 }
@@ -46,7 +46,7 @@ int long_vector_add_gpu(const float* A, const float* B, float* C, int elements_n
 	cudaEventCreate(&start);
 	cudaEventCreate(&stop);
 	// cudaEventRecord: 记录一个事件,异步启动,start记录起始时间
-	cudaEventRecord(start, 0);
+	//cudaEventRecord(start, 0);
 
 	size_t lengthA{ elements_num * sizeof(float) }, lengthB{ elements_num * sizeof(float) };
 	size_t lengthC{ elements_num * sizeof(float) };
@@ -83,8 +83,13 @@ int long_vector_add_gpu(const float* A, const float* B, float* C, int elements_n
 	用动态分配的共享存储器大小,这些动态分配的存储器可供声明为外部数组
 	(extern __shared__)的其他任何变量使用;Ns是一个可选参数,默认值为0;S为
 	cudaStream_t类型,用于设置与内核函数关联的流.S是一个可选参数,默认值0. */
-	long_vector_add << < 512, 512 >> >(d_A, d_B, d_C, elements_num);
+	//long_vector_add << < 512, 512 >> >(d_A, d_B, d_C, elements_num);
 
+	cudaEventRecord(start, 0);
+
+	long_vector_add << < 1024*4, 512 >> >(d_A, d_B, d_C, elements_num);
+
+	cudaEventRecord(stop, 0);
 	/* cudaDeviceSynchronize: kernel的启动是异步的, 为了定位它是否出错, 一
 	般需要加上cudaDeviceSynchronize函数进行同步; 将会一直处于阻塞状态,直到
 	前面所有请求的任务已经被全部执行完毕,如果前面执行的某个任务失败,将会
@@ -101,7 +106,7 @@ int long_vector_add_gpu(const float* A, const float* B, float* C, int elements_n
 	cudaFree(d_C);
 
 	// cudaEventRecord: 记录一个事件,异步启动,stop记录结束时间
-	cudaEventRecord(stop, 0);
+	//cudaEventRecord(stop, 0);
 	// cudaEventSynchronize: 事件同步,等待一个事件完成,异步启动
 	cudaEventSynchronize(stop);
 	// cudaEventElapseTime: 计算两个事件之间经历的时间,单位为毫秒,异步启动

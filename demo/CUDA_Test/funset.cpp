@@ -350,7 +350,7 @@ int test_matrix_mul()
 
 	return 0;
 }
-
+#if 0
 int test_dot_product()
 {
 	// Blog: http://blog.csdn.net/fengbingchun/article/details/75669764
@@ -379,7 +379,8 @@ int test_dot_product()
 
 	return 0;
 }
-
+#endif
+#if 0
 int test_streams()
 {
 	// Blog: http://blog.csdn.net/fengbingchun/article/details/76532198
@@ -414,11 +415,12 @@ int test_streams()
 
 	return 0;
 }
-
+#endif
+#if 0
 int test_calculate_histogram()
 {
 	// Blog: http://blog.csdn.net/fengbingchun/article/details/76417598
-	const int length{ 10 * 1024 * 1024 }; // 100MB
+	const int length{ 50 * 1024 * 1024 }; // 100MB
 	std::unique_ptr<unsigned char[]> data(new unsigned char[length]);
 	generator_random_number<unsigned char>(data.get(), length, 0, 255);
 
@@ -452,6 +454,7 @@ int test_calculate_histogram()
 
 	return 0;
 }
+#endif
 
 int test_heat_conduction()
 {
@@ -691,11 +694,11 @@ int test_julia()
 
 	return 0;
 }
-
+#if 0
 int test_long_vector_add()
 {
 	// Blog: http://blog.csdn.net/fengbingchun/article/details/75570546
-	const int length{ 100000000 };
+	const int length{ 200000000 };
 	std::unique_ptr<float[]> A(new float[length]);
 	std::unique_ptr<float[]> B(new float[length]);
 	std::unique_ptr<float[]> C1(new float[length]);
@@ -725,7 +728,8 @@ int test_long_vector_add()
 
 	return 0;
 }
-
+#endif
+#if 0
 int test_vector_add()
 {
 	// Blog: http://blog.csdn.net/fengbingchun/article/details/74120057
@@ -757,4 +761,5 @@ int test_vector_add()
 
 	return 0;
 }
+#endif
 
